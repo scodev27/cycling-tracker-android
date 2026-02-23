@@ -1,4 +1,4 @@
-package cat.deim.asm01.pedalean2.ui.theme
+package cat.deim.asm01.pedalean2.domain.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

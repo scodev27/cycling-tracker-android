@@ -1,6 +1,5 @@
-package cat.deim.asm01.pedalean2.ui.theme
+package cat.deim.asm01.pedalean2.domain.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
