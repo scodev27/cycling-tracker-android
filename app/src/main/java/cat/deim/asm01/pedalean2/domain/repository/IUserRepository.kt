@@ -1,6 +1,6 @@
-package cat.deim.asmxx.pedalean2.domain.repository
+package cat.deim.asm01.pedalean2.domain.repository
 
-import cat.deim.asmxx.pedalean2.domain.models.User
+import cat.deim.asm01.pedalean2.domain.models.User
 
 interface IUserRepository {
     /**

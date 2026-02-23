@@ -1,6 +1,6 @@
-package cat.deim.asmxx.pedalean2.domain.repository
+package cat.deim.asm01.pedalean2.domain.repository
 
-import cat.deim.asmxx.pedalean2.domain.models.Rent
+import cat.deim.asm01.pedalean2.domain.models.Rent
 
 interface IRentRepository {
     /** Returns a list of all rents. */

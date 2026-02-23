@@ -1,7 +1,6 @@
-package cat.deim.asmxx.pedalean2.domain.repository
+package cat.deim.asm01.pedalean2.domain.repository
 
-import cat.deim.asmxx.pedalean2.domain.models.Bike
-
+import cat.deim.asm01.pedalean2.domain.models.Bike
 interface IBikeRepository {
     /**
      * Inserts a list of bikes into the repository.
