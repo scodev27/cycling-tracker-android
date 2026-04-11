@@ -1,4 +1,4 @@
-package cat.deim.asm01.pedalean2.domain.presentation.ui.theme
+package cat.deim.asm01.pedalean2.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
