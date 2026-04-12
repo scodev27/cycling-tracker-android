@@ -27,7 +27,17 @@
             android:theme="@style/Theme.Pedalean2" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.main.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Pedalean2" />
+
+        <activity
+            android:name=".presentation.profile.ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Pedalean2" />
+
+        <activity
+            android:name=".presentation.detail.BikeDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.Pedalean2" />
     </application>

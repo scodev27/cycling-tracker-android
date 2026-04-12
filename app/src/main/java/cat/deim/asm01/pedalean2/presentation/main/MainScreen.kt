@@ -2,6 +2,7 @@ package cat.deim.asm01.pedalean2.presentation.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable // Importat per als clics
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +28,7 @@ import cat.deim.asm01.pedalean2.domain.models.Bike
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(viewModel: MainViewModel, onProfileClick: () -> Unit, onBikeClick: (String) -> Unit) {
     val state by viewModel.state.collectAsState()
 
     Scaffold(
@@ -38,36 +39,23 @@ fun MainScreen(viewModel: MainViewModel) {
             )
         }
     ) { paddingValues ->
-
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             when (state) {
-                is MainState.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-                is MainState.Error -> {
-                    Text(
-                        text = (state as MainState.Error).message,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                is MainState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                is MainState.Error -> Text(text = (state as MainState.Error).message, color = Color.Red, modifier = Modifier.align(Alignment.Center))
                 is MainState.Success -> {
                     val data = state as MainState.Success
-                    val user = data.user
-                    val bikesList = data.bikes
-
                     LazyColumn(
                         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         item {
-                            UserHeader(userName = "${user.username} account")
+                            UserHeader(
+                                userName = "${data.user.username} account",
+                                onProfileClick = onProfileClick
+                            )
                         }
-
-                        items(bikesList) { bike ->
-                            BikeCard(bike = bike)
-                        }
-
+                        items(data.bikes) { bike -> BikeCard(bike = bike, onBikeClick = onBikeClick) }
                         item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
                 }
@@ -77,9 +65,11 @@ fun MainScreen(viewModel: MainViewModel) {
 }
 
 @Composable
-fun UserHeader(userName: String) {
+fun UserHeader(userName: String, onProfileClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onProfileClick() },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -88,7 +78,10 @@ fun UserHeader(userName: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier.size(64.dp).clip(CircleShape).background(Color.LightGray),
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Default.Person, contentDescription = "Avatar", tint = Color.Gray)
@@ -100,7 +93,7 @@ fun UserHeader(userName: String) {
 }
 
 @Composable
-fun BikeCard(bike: Bike) {
+fun BikeCard(bike: Bike, onBikeClick: (String) -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -108,43 +101,28 @@ fun BikeCard(bike: Bike) {
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-
             Image(
                 painter = painterResource(id = R.drawable.bike),
-                contentDescription = "Imatge de la bicicleta",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .clip(RoundedCornerShape(12.dp)),
+                contentDescription = "Bici",
+                modifier = Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(text = "${bike.meters}m away", color = Color.Gray, fontSize = 14.sp)
             Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                 Text(text = bike.type, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-
                 Column(horizontalAlignment = Alignment.End) {
                     Text(text = "${bike.batteryLevel}%", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     Text(text = "battery", fontSize = 14.sp)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-
             Button(
-                onClick = {  },
+                onClick = { onBikeClick(bike.uuid) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE2F0D9), contentColor = Color.Black)
-            ) {
-                Text("View Details")
-            }
+            ) { Text("View Details") }
         }
     }
 }
