@@ -43,12 +43,12 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar enrere")
                     }
                 },
                 actions = {
                     IconButton(onClick = { }) {
-                        Icon(Icons.Default.Place, contentDescription = null)
+                        Icon(Icons.Default.Place, contentDescription = "Mapa")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -82,7 +82,7 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Image(
                                     painter = painterResource(id = R.drawable.bike),
-                                    contentDescription = null,
+                                    contentDescription = "Imatge de la bicicleta",
                                     modifier = Modifier.size(56.dp).clip(CircleShape),
                                     contentScale = ContentScale.Crop
                                 )
@@ -128,20 +128,27 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
                                 .clip(RoundedCornerShape(16.dp))
                                 .background(Color.LightGray)
                         ) {
+                            // Fons amb el mapa
                             Image(
                                 painter = painterResource(id = R.drawable.mapa_reus),
-                                contentDescription = null,
+                                contentDescription = "Mapa",
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
 
+                            val refLat = 41.132f
+                            val refLon = 1.245f
+                            val multiplier = 8000f
+                            val calcX = ((bike.longitude - refLon) * multiplier).dp
+                            val calcY = ((refLat - bike.latitude) * multiplier).dp
+
                             Icon(
                                 imageVector = Icons.Default.LocationOn,
-                                contentDescription = null,
+                                contentDescription = "Pin Bici",
                                 tint = Color(0xFF4CAF50),
                                 modifier = Modifier
                                     .align(Alignment.Center)
-                                    .offset(x = bike.longitude.toInt().dp, y = bike.latitude.toInt().dp)
+                                    .offset(x = calcX, y = calcY)
                                     .size(48.dp)
                             )
                         }

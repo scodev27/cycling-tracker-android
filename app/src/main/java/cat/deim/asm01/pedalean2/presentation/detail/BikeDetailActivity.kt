@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cat.deim.asm01.pedalean2.data.repository.BikeRepository
+import cat.deim.asm01.pedalean2.data.repository.RentRepository
+import cat.deim.asm01.pedalean2.data.repository.UserRepository
 import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
 import com.pedalean2.common.factory.DatasourceFactory
 
@@ -19,12 +21,14 @@ class BikeDetailActivity : ComponentActivity() {
             Pedalean2Theme {
                 val factory = DatasourceFactory.getInstance()
                 val bikeRepository = BikeRepository(factory.createBikeDatasource())
+                val rentRepository = RentRepository(factory.createRentDatasource())
+                val userRepository = UserRepository(factory.createUserDatasource())
 
                 val viewModel: BikeDetailViewModel = ViewModelProvider(
                     this,
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return BikeDetailViewModel(bikeRepository, bikeUuid) as T
+                            return BikeDetailViewModel(bikeRepository, rentRepository, userRepository, bikeUuid) as T
                         }
                     }
                 ).get(BikeDetailViewModel::class.java)

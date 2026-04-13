@@ -120,15 +120,8 @@ fun ProfileCard(user: User) {
 
 @Composable
 fun RentHistoryCard(rent: Rent) {
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     val dateString = dateFormat.format(rent.timeStart)
-
-    val hours = rent.rentTime / 60
-    val mins = rent.rentTime % 60
-    val timeString = if (hours > 0) "$hours hour $mins min." else "$mins min."
-    val km = String.format(Locale.US, "%.1f", rent.rentMeters / 1000f)
-
-    val price = String.format(Locale.US, "%.2f", rent.rentTime * 0.20)
 
     Card(
         modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
@@ -139,12 +132,28 @@ fun RentHistoryCard(rent: Rent) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "${rent.rents.name} - $dateString", fontWeight = FontWeight.Medium, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Travel time: $timeString", fontSize = 14.sp, color = Color.Gray)
-                Text(text = "$km km", fontSize = 14.sp, color = Color.Gray)
+
+            if (rent.isRented) {
+                Text(
+                    text = "Lloguer en curs...",
+                    fontSize = 15.sp,
+                    color = Color(0xFFD81B60),
+                    fontWeight = FontWeight.Bold
+                )
+            } else {
+                val hours = rent.rentTime / 60
+                val mins = rent.rentTime % 60
+                val timeString = if (hours > 0) "$hours hour $mins min." else "$mins min."
+                val km = String.format(Locale.US, "%.1f", rent.rentMeters / 1000f)
+                val price = String.format(Locale.US, "%.2f", rent.rentTime * 0.20)
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "Travel time: $timeString", fontSize = 14.sp, color = Color.Gray)
+                    Text(text = "$km km", fontSize = 14.sp, color = Color.Gray)
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "$price euros", fontSize = 14.sp, color = Color.Gray)
             }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "$price euros", fontSize = 14.sp, color = Color.Gray)
         }
     }
 }

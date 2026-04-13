@@ -2,7 +2,7 @@ package cat.deim.asm01.pedalean2.presentation.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable // Importat per als clics
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -45,18 +45,30 @@ fun MainScreen(viewModel: MainViewModel, onProfileClick: () -> Unit, onBikeClick
                 is MainState.Error -> Text(text = (state as MainState.Error).message, color = Color.Red, modifier = Modifier.align(Alignment.Center))
                 is MainState.Success -> {
                     val data = state as MainState.Success
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp)
                     ) {
-                        item {
-                            UserHeader(
-                                userName = "${data.user.username} account",
-                                onProfileClick = onProfileClick
-                            )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        UserHeader(
+                            userName = "${data.user.username} account",
+                            onProfileClick = onProfileClick
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding = PaddingValues(bottom = 16.dp)
+                        ) {
+                            items(data.bikes) { bike ->
+                                BikeCard(bike = bike, onBikeClick = onBikeClick)
+                            }
                         }
-                        items(data.bikes) { bike -> BikeCard(bike = bike, onBikeClick = onBikeClick) }
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
                 }
             }
