@@ -3,7 +3,9 @@
     <string name="get_started">Get Started</string>
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
-    <string name="forgot_password">Forgot your password?</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="forgot_password_no">Forgot your password? No</string>
     <string name="login_desc">Login</string>
     <string name="account_name_format">%1$s account</string>
     <string name="meters_away">%1$sm away</string>
@@ -34,4 +36,6 @@
     <string name="price_euros">%1$s euros</string>
     <string name="format_date">dd/MM/yyyy HH:mm</string>
     <string name="format_date_short">yyyy-MM-dd</string>
+    <string name="splash_subtitle">Explore urban areas on two wheels.</string>
+    <string name="logo_desc">Logo Pedalean</string>
 </resources>

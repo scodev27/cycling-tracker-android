@@ -1,5 +1,6 @@
 package cat.deim.asm01.pedalean2.presentation.splash
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
 import cat.deim.asm01.pedalean2.presentation.login.LoginActivity
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
