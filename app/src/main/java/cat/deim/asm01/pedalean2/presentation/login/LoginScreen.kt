@@ -4,17 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cat.deim.asm01.pedalean2.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,46 +39,46 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(dimensionResource(id = R.dimen.dp_24)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_48)))
             Text(
-                text = "PEDALEAN 2",
-                fontSize = 32.sp,
+                text = stringResource(id = R.string.app_name).uppercase(),
+                fontSize = dimensionResource(id = R.dimen.sp_32).value.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_48)))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text(stringResource(id = R.string.email_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_16)))
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(stringResource(id = R.string.password_label)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_8)))
 
             TextButton(
-                onClick = {  },
+                onClick = { },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text(text = "Forgot your password?", color = Color.Gray)
+                Text(text = stringResource(id = R.string.forgot_password), color = Color.Gray)
             }
 
             if (state is LoginState.Error) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_8)))
                 Text(
                     text = (state as LoginState.Error).message,
                     color = MaterialTheme.colorScheme.error,
@@ -88,7 +90,7 @@ fun LoginScreen(
 
             Box(
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(dimensionResource(id = R.dimen.dp_64))
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
                     .align(Alignment.End)
@@ -97,9 +99,9 @@ fun LoginScreen(
                     CircularProgressIndicator(
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .padding(12.dp),
+                            .padding(dimensionResource(id = R.dimen.dp_12)),
                         color = Color.White,
-                        strokeWidth = 3.dp
+                        strokeWidth = dimensionResource(id = R.dimen.dp_3)
                     )
                 } else {
                     IconButton(
@@ -107,15 +109,15 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Login",
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = stringResource(id = R.string.login_desc),
                             tint = Color.White,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(dimensionResource(id = R.dimen.dp_32))
                         )
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_32)))
         }
     }
 }

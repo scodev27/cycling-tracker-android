@@ -9,3 +9,9 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+val RentAvailableColor = Color(0xFFE2F0D9)
+
+val RentActiveColor = Color(0xFFD81B60)
+
+val SuccessGreen = Color(0xFF4CAF50)

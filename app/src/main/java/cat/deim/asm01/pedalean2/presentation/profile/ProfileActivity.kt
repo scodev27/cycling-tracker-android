@@ -29,7 +29,7 @@ class ProfileActivity : ComponentActivity() {
                             return ProfileViewModel(userRepository, rentRepository) as T
                         }
                     }
-                ).get(ProfileViewModel::class.java)
+                )[ProfileViewModel::class.java]
 
                 ProfileScreen(
                     viewModel = viewModel,

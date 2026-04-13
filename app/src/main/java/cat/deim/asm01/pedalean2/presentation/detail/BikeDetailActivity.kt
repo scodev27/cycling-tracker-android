@@ -31,7 +31,7 @@ class BikeDetailActivity : ComponentActivity() {
                             return BikeDetailViewModel(bikeRepository, rentRepository, userRepository, bikeUuid) as T
                         }
                     }
-                ).get(BikeDetailViewModel::class.java)
+                )[BikeDetailViewModel::class.java]
 
                 BikeDetailScreen(
                     viewModel = viewModel,

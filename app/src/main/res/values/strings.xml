@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">Pedalean2</string>
+    <string name="get_started">Get Started</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="login_desc">Login</string>
+    <string name="account_name_format">%1$s account</string>
+    <string name="meters_away">%1$sm away</string>
+    <string name="meters_away_detail">%1$d meters away</string>
+    <string name="battery_label">battery</string>
+    <string name="battery_level">%1$s%%</string>
+    <string name="battery_detail">Battery: %1$s (%2$d%%)</string>
+    <string name="view_details">View Details</string>
+    <string name="status_available">Available</string>
+    <string name="status_rented">Rented</string>
+    <string name="btn_rent">Rent</string>
+    <string name="btn_stop_rent">Stop rent</string>
+    <string name="battery_high">High</string>
+    <string name="battery_medium">Medium</string>
+    <string name="battery_low">Low</string>
+    <string name="last_maintenance">Last maintenance: %1$s</string>
+    <string name="map_desc">Mapa</string>
+    <string name="back_desc">Back</string>
+    <string name="avatar_desc">Avatar</string>
+    <string name="bike_desc">Bici</string>
+    <string name="pin_desc">Pin</string>
+    <string name="profile_title">Profile</string>
+    <string name="rental_history_title">Rental History</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="rent_in_progress">Lloguer en curs…</string>
+    <string name="travel_time">Travel time: %1$s</string>
+    <string name="distance_km">%1$s km</string>
+    <string name="price_euros">%1$s euros</string>
+    <string name="format_date">dd/MM/yyyy HH:mm</string>
+    <string name="format_date_short">yyyy-MM-dd</string>
 </resources>

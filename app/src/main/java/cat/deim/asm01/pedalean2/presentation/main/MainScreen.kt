@@ -19,12 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cat.deim.asm01.pedalean2.R
 import cat.deim.asm01.pedalean2.domain.models.Bike
+import cat.deim.asm01.pedalean2.presentation.ui.theme.RentAvailableColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +36,13 @@ fun MainScreen(viewModel: MainViewModel, onProfileClick: () -> Unit, onBikeClick
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Pedalean2", fontSize = 24.sp, fontWeight = FontWeight.Medium) },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontSize = dimensionResource(id = R.dimen.sp_24).value.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
@@ -49,21 +57,21 @@ fun MainScreen(viewModel: MainViewModel, onProfileClick: () -> Unit, onBikeClick
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = dimensionResource(id = R.dimen.dp_16))
                     ) {
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_8)))
 
                         UserHeader(
-                            userName = "${data.user.username} account",
+                            userName = stringResource(id = R.string.account_name_format, data.user.username),
                             onProfileClick = onProfileClick
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_16)))
 
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            contentPadding = PaddingValues(bottom = 16.dp)
+                            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.dp_16)),
+                            contentPadding = PaddingValues(bottom = dimensionResource(id = R.dimen.dp_16))
                         ) {
                             items(data.bikes) { bike ->
                                 BikeCard(bike = bike, onBikeClick = onBikeClick)
@@ -83,23 +91,23 @@ fun UserHeader(userName: String, onProfileClick: () -> Unit) {
             .fillMaxWidth()
             .clickable { onProfileClick() },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.dp_2))
     ) {
         Row(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.dp_16)).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(dimensionResource(id = R.dimen.dp_64))
                     .clip(CircleShape)
                     .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Default.Person, contentDescription = "Avatar", tint = Color.Gray)
+                Icon(Icons.Default.Person, contentDescription = stringResource(id = R.string.avatar_desc), tint = Color.Gray)
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(text = userName, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.dp_16)))
+            Text(text = userName, fontSize = dimensionResource(id = R.dimen.sp_18).value.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -109,32 +117,43 @@ fun BikeCard(bike: Bike, onBikeClick: (String) -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.dp_4)),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_16))
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.dp_16))) {
             Image(
                 painter = painterResource(id = R.drawable.bike),
-                contentDescription = "Bici",
-                modifier = Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(12.dp)),
+                contentDescription = stringResource(id = R.string.bike_desc),
+                modifier = Modifier.fillMaxWidth().height(dimensionResource(id = R.dimen.dp_150)).clip(RoundedCornerShape(dimensionResource(id = R.dimen.dp_12))),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "${bike.meters}m away", color = Color.Gray, fontSize = 14.sp)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_8)))
+            Text(
+                text = stringResource(id = R.string.meters_away, bike.meters.toString()),
+                color = Color.Gray,
+                fontSize = dimensionResource(id = R.dimen.sp_14).value.sp
+            )
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_16)))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
-                Text(text = bike.type, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(text = bike.type, fontWeight = FontWeight.Bold, fontSize = dimensionResource(id = R.dimen.sp_16).value.sp)
                 Column(horizontalAlignment = Alignment.End) {
-                    Text(text = "${bike.batteryLevel}%", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    Text(text = "battery", fontSize = 14.sp)
+                    Text(
+                        text = stringResource(id = R.string.battery_level, bike.batteryLevel.toString()),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = dimensionResource(id = R.dimen.sp_14).value.sp
+                    )
+                    Text(
+                        text = stringResource(id = R.string.battery_label),
+                        fontSize = dimensionResource(id = R.dimen.sp_14).value.sp
+                    )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_16)))
             Button(
                 onClick = { onBikeClick(bike.uuid) },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE2F0D9), contentColor = Color.Black)
-            ) { Text("View Details") }
+                colors = ButtonDefaults.buttonColors(containerColor = RentAvailableColor, contentColor = Color.Black)
+            ) { Text(stringResource(id = R.string.view_details)) }
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
@@ -20,11 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cat.deim.asm01.pedalean2.R
+import cat.deim.asm01.pedalean2.presentation.ui.theme.RentActiveColor
+import cat.deim.asm01.pedalean2.presentation.ui.theme.RentAvailableColor
+import cat.deim.asm01.pedalean2.presentation.ui.theme.SuccessGreen
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -38,17 +43,21 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
             TopAppBar(
                 title = {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Text("Pedalean2", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+                        Text(
+                            text = stringResource(id = R.string.app_name),
+                            fontSize = dimensionResource(id = R.dimen.sp_20).value.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar enrere")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = R.string.back_desc))
                     }
                 },
                 actions = {
                     IconButton(onClick = { }) {
-                        Icon(Icons.Default.Place, contentDescription = "Mapa")
+                        Icon(Icons.Default.Place, contentDescription = stringResource(id = R.string.map_desc))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -70,9 +79,9 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
                 is BikeDetailState.Success -> {
                     val bike = (state as BikeDetailState.Success).bike
 
-                    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
-                        Text(text = bike.type, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.height(16.dp))
+                    Column(modifier = Modifier.fillMaxSize().padding(dimensionResource(id = R.dimen.dp_24))) {
+                        Text(text = bike.type, fontSize = dimensionResource(id = R.dimen.sp_24).value.sp, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_16)))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -82,56 +91,73 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Image(
                                     painter = painterResource(id = R.drawable.bike),
-                                    contentDescription = "Imatge de la bicicleta",
-                                    modifier = Modifier.size(56.dp).clip(CircleShape),
+                                    contentDescription = stringResource(id = R.string.bike_desc),
+                                    modifier = Modifier.size(dimensionResource(id = R.dimen.dp_56)).clip(CircleShape),
                                     contentScale = ContentScale.Crop
                                 )
-                                Spacer(modifier = Modifier.width(12.dp))
+                                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.dp_12)))
                                 Column {
-                                    val status = if (bike.isRented) "Rented" else "Available"
-                                    Text(text = status, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                    Text(text = bike.name, fontSize = 14.sp, color = Color.Gray)
+                                    val statusStrId = if (bike.isRented) R.string.status_rented else R.string.status_available
+                                    Text(
+                                        text = stringResource(id = statusStrId),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = dimensionResource(id = R.dimen.sp_14).value.sp
+                                    )
+                                    Text(
+                                        text = bike.name,
+                                        fontSize = dimensionResource(id = R.dimen.sp_14).value.sp,
+                                        color = Color.Gray
+                                    )
                                 }
                             }
 
-                            val buttonColor = if (bike.isRented) Color(0xFFD81B60) else Color(0xFFE2F0D9)
+                            val buttonColor = if (bike.isRented) RentActiveColor else RentAvailableColor
                             val buttonTextColor = if (bike.isRented) Color.White else Color.Black
-                            val buttonText = if (bike.isRented) "Stop rent" else "Rent"
+                            val buttonStrId = if (bike.isRented) R.string.btn_stop_rent else R.string.btn_rent
 
                             Button(
                                 onClick = { viewModel.toggleRentStatus() },
                                 colors = ButtonDefaults.buttonColors(containerColor = buttonColor, contentColor = buttonTextColor),
-                                shape = RoundedCornerShape(12.dp)
+                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_12))
                             ) {
-                                Text(buttonText, fontWeight = FontWeight.Medium)
+                                Text(stringResource(id = buttonStrId), fontWeight = FontWeight.Medium)
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(24.dp))
-                        HorizontalDivider(color = Color.LightGray, thickness = 1.dp)
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_24)))
+                        HorizontalDivider(color = Color.LightGray, thickness = dimensionResource(id = R.dimen.dp_1))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_24)))
 
-                        val batteryText = if (bike.batteryLevel > 70) "High" else if (bike.batteryLevel > 30) "Medium" else "Low"
+                        val batteryStateStrId = if (bike.batteryLevel > 70) R.string.battery_high else if (bike.batteryLevel > 30) R.string.battery_medium else R.string.battery_low
+                        val batteryStateStr = stringResource(id = batteryStateStrId)
 
-                        DetailRow(icon = Icons.Default.Info, text = "Battery: $batteryText (${bike.batteryLevel}%)")
-                        DetailRow(icon = Icons.Default.LocationOn, text = "${bike.meters} meters away")
+                        DetailRow(
+                            icon = Icons.Default.Info,
+                            text = stringResource(id = R.string.battery_detail, batteryStateStr, bike.batteryLevel)
+                        )
+                        DetailRow(
+                            icon = Icons.Default.LocationOn,
+                            text = stringResource(id = R.string.meters_away_detail, bike.meters)
+                        )
 
-                        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                        DetailRow(icon = Icons.Default.CheckCircle, text = "Last maintenance: ${dateFormat.format(bike.lastMaintenance)}")
+                        val dateFormat = SimpleDateFormat(stringResource(id = R.string.format_date_short), Locale.getDefault())
+                        DetailRow(
+                            icon = Icons.Default.CheckCircle,
+                            text = stringResource(id = R.string.last_maintenance, dateFormat.format(bike.lastMaintenance))
+                        )
 
-                        Spacer(modifier = Modifier.height(32.dp))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_32)))
 
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
-                                .clip(RoundedCornerShape(16.dp))
+                                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.dp_16)))
                                 .background(Color.LightGray)
                         ) {
-                            // Fons amb el mapa
                             Image(
                                 painter = painterResource(id = R.drawable.mapa_reus),
-                                contentDescription = "Mapa",
+                                contentDescription = stringResource(id = R.string.map_desc),
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
@@ -144,12 +170,12 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
 
                             Icon(
                                 imageVector = Icons.Default.LocationOn,
-                                contentDescription = "Pin Bici",
-                                tint = Color(0xFF4CAF50),
+                                contentDescription = stringResource(id = R.string.pin_desc),
+                                tint = SuccessGreen,
                                 modifier = Modifier
                                     .align(Alignment.Center)
                                     .offset(x = calcX, y = calcY)
-                                    .size(48.dp)
+                                    .size(dimensionResource(id = R.dimen.dp_48))
                             )
                         }
                     }
@@ -161,9 +187,12 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
 
 @Composable
 fun DetailRow(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String) {
-    Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(24.dp))
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(text = text, fontSize = 16.sp)
+    Row(
+        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dp_8)),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(dimensionResource(id = R.dimen.dp_24)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.dp_16)))
+        Text(text = text, fontSize = dimensionResource(id = R.dimen.sp_16).value.sp)
     }
 }

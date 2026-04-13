@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                             return MainViewModel(userRepository, bikeRepository) as T
                         }
                     }
-                ).get(MainViewModel::class.java)
+                )[MainViewModel::class.java]
 
                 MainScreen(
                     viewModel = viewModel,

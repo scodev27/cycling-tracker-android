@@ -27,7 +27,7 @@ class LoginActivity : ComponentActivity() {
                             return LoginViewModel(userRepository) as T
                         }
                     }
-                ).get(LoginViewModel::class.java)
+                )[LoginViewModel::class.java]
 
                 LoginScreen(
                     viewModel = loginViewModel,

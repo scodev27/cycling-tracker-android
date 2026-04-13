@@ -8,9 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cat.deim.asm01.pedalean2.R
 
 @Composable
 fun SplashScreen(onNavigateToLogin: () -> Unit) {
@@ -21,15 +23,15 @@ fun SplashScreen(onNavigateToLogin: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(dimensionResource(id = R.dimen.dp_24)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "PEDALEAN 2",
-                fontSize = 40.sp,
+                text = stringResource(id = R.string.app_name).uppercase(),
+                fontSize = dimensionResource(id = R.dimen.sp_40).value.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -40,12 +42,15 @@ fun SplashScreen(onNavigateToLogin: () -> Unit) {
                 onClick = onNavigateToLogin,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .height(dimensionResource(id = R.dimen.dp_56))
             ) {
-                Text(text = "Get Started", fontSize = 18.sp)
+                Text(
+                    text = stringResource(id = R.string.get_started),
+                    fontSize = dimensionResource(id = R.dimen.sp_18).value.sp
+                )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_32)))
         }
     }
 }
