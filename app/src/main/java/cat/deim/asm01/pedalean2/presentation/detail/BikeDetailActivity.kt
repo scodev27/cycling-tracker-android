@@ -5,6 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import cat.deim.asm01.pedalean2.data.datasource.BikeLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.RentLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.UserLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.database.Pedalean2AppDatabase
 import cat.deim.asm01.pedalean2.data.repository.BikeRepository
 import cat.deim.asm01.pedalean2.data.repository.RentRepository
 import cat.deim.asm01.pedalean2.data.repository.UserRepository
@@ -20,9 +24,22 @@ class BikeDetailActivity : ComponentActivity() {
         setContent {
             Pedalean2Theme {
                 val factory = DatasourceFactory.getInstance()
-                val bikeRepository = BikeRepository(factory.createBikeDatasource())
-                val rentRepository = RentRepository(factory.createRentDatasource())
-                val userRepository = UserRepository(factory.createUserDatasource())
+                val database = Pedalean2AppDatabase.getDatabase(this@BikeDetailActivity)
+
+                val bikeRepository = BikeRepository(
+                    localDatasource = BikeLocalDatasource(database.bikeDao()),
+                    remoteDatasource = factory.createBikeDatasource()
+                )
+
+                val rentRepository = RentRepository(
+                    localDatasource = RentLocalDatasource(database.rentDao()),
+                    remoteDatasource = factory.createRentDatasource()
+                )
+
+                val userRepository = UserRepository(
+                    localDatasource = UserLocalDatasource(database.userDao()),
+                    remoteDatasource = factory.createUserDatasource()
+                )
 
                 val viewModel: BikeDetailViewModel = ViewModelProvider(
                     this,

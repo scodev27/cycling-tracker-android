@@ -7,8 +7,10 @@ import com.pedalean2.common.datasource.local.model.BikeModel
 import com.pedalean2.common.interfaces.IDatasource
 
 class BikeRepository(
-    private val localDatasource: IDatasource<BikeModel>
+    private val localDatasource: IDatasource<BikeModel>,
+    private val remoteDatasource: IDatasource<BikeModel>
 ) : IBikeRepository {
+
     private fun BikeModel.toDomain(): Bike {
         return Bike(
             uuid = this.uuid,
@@ -42,6 +44,22 @@ class BikeRepository(
         )
     }
 
+    override fun getAll(): List<Bike> {
+        var localBikes = localDatasource.getAll()
+
+        if (localBikes.isEmpty()) {
+            val remoteBikes = remoteDatasource.getAll()
+
+            remoteBikes.forEach { bikeModel ->
+                localDatasource.insert(bikeModel)
+            }
+
+            localBikes = localDatasource.getAll()
+        }
+
+        return localBikes.map { it.toDomain() }
+    }
+
     override fun insertAll(bikes: List<Bike>): Int {
         var count = 0
         bikes.forEach { bike ->
@@ -50,10 +68,6 @@ class BikeRepository(
             }
         }
         return count
-    }
-
-    override fun getAll(): List<Bike> {
-        return localDatasource.getAll().map { it.toDomain() }
     }
 
     override fun updateAll(bikes: List<Bike>): Int {

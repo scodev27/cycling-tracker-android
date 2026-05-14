@@ -7,7 +7,8 @@ import com.pedalean2.common.interfaces.IDatasource
 import cat.deim.asm01.pedalean2.utils.toDate
 
 class UserRepository(
-    private val localDatasource: IDatasource<UserModel>
+    private val localDatasource: IDatasource<UserModel>,
+    private val remoteDatasource: IDatasource<UserModel>
 ) : IUserRepository {
 
     private fun UserModel.toDomain(): User {
@@ -49,12 +50,25 @@ class UserRepository(
     }
 
     override fun getUserById(uuid: String): User {
-        val userModel = localDatasource.getById(uuid)
+        var userModel = localDatasource.getById(uuid)
+
+        if (userModel == null) {
+            userModel = remoteDatasource.getById(uuid)
+            userModel?.let { localDatasource.insert(it) }
+        }
+
         return userModel!!.toDomain()
     }
 
     override fun getActiveUser(): User {
-        val allUsers = localDatasource.getAll()
+        var allUsers = localDatasource.getAll()
+
+        if (allUsers.isEmpty()) {
+            val remoteUsers = remoteDatasource.getAll()
+            remoteUsers.forEach { localDatasource.insert(it) }
+            allUsers = localDatasource.getAll()
+        }
+
         return allUsers.first().toDomain()
     }
 

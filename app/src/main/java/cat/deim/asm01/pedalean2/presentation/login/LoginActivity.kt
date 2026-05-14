@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import cat.deim.asm01.pedalean2.data.datasource.UserLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.database.Pedalean2AppDatabase
 import cat.deim.asm01.pedalean2.data.repository.UserRepository
 import cat.deim.asm01.pedalean2.presentation.main.MainActivity
 import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
@@ -16,9 +18,13 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Pedalean2Theme {
-                val userDatasource = DatasourceFactory.getInstance().createUserDatasource()
+                val factory = DatasourceFactory.getInstance()
+                val database = Pedalean2AppDatabase.getDatabase(this@LoginActivity)
 
-                val userRepository = UserRepository(userDatasource)
+                val userRepository = UserRepository(
+                    localDatasource = UserLocalDatasource(database.userDao()),
+                    remoteDatasource = factory.createUserDatasource()
+                )
 
                 val loginViewModel: LoginViewModel = ViewModelProvider(
                     this,

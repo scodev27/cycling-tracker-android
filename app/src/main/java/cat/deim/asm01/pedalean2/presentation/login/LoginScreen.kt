@@ -71,7 +71,7 @@ fun LoginScreen(
                     placeholder = { Text(stringResource(id = R.string.enter_email), color = Color.Gray) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    shape = RoundedCornerShape(50) // Vores totalment arrodonides
+                    shape = RoundedCornerShape(50)
                 )
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_16)))
@@ -89,7 +89,7 @@ fun LoginScreen(
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    shape = RoundedCornerShape(50) // Vores totalment arrodonides
+                    shape = RoundedCornerShape(50)
                 )
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_8)))

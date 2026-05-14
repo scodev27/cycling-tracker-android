@@ -11,7 +11,8 @@ import com.pedalean2.common.datasource.local.model.UserRentModel
 import com.pedalean2.common.interfaces.IDatasource
 
 class RentRepository(
-    private val localDatasource: IDatasource<RentModel>
+    private val localDatasource: IDatasource<RentModel>,
+    private val remoteDatasource: IDatasource<RentModel>
 ) : IRentRepository {
 
     private fun RentModel.toDomain(): Rent {
@@ -65,7 +66,16 @@ class RentRepository(
     }
 
     override fun getAllRents(): List<Rent> {
-        return localDatasource.getAll().map { it.toDomain() }
+        var localRents = localDatasource.getAll()
+
+        // Sincronització inicial dels lloguers
+        if (localRents.isEmpty()) {
+            val remoteRents = remoteDatasource.getAll()
+            remoteRents.forEach { localDatasource.insert(it) }
+            localRents = localDatasource.getAll()
+        }
+
+        return localRents.map { it.toDomain() }
     }
 
     override fun createAllRents(rents: List<Rent>): Int {
@@ -100,7 +110,14 @@ class RentRepository(
     }
 
     override fun getRentByUuid(uuid: String): Rent? {
-        return localDatasource.getById(uuid)?.toDomain()
+        var rentModel = localDatasource.getById(uuid)
+
+        if (rentModel == null) {
+            rentModel = remoteDatasource.getById(uuid)
+            rentModel?.let { localDatasource.insert(it) }
+        }
+
+        return rentModel?.toDomain()
     }
 
     override fun createRent(rent: Rent): Boolean {
