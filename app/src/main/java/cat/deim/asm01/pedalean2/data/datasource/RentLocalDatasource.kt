@@ -6,6 +6,8 @@ import com.pedalean2.common.datasource.local.model.BikeRentModel
 import com.pedalean2.common.datasource.local.model.RentModel
 import com.pedalean2.common.datasource.local.model.UserRentModel
 import com.pedalean2.common.interfaces.IDatasource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 class RentLocalDatasource(private val rentDao: RentDao) : IDatasource<RentModel> {
 
@@ -27,13 +29,13 @@ class RentLocalDatasource(private val rentDao: RentDao) : IDatasource<RentModel>
         )
     }
 
-    override fun getAll(): List<RentModel> = rentDao.getAll().map { it.toRentModel() }
+    override fun getAll(): List<RentModel> = runBlocking(Dispatchers.IO) { rentDao.getAll().map { it.toRentModel() } }
 
-    override fun getById(uuid: String): RentModel? = rentDao.getById(uuid)?.toRentModel()
+    override fun getById(uuid: String): RentModel? = runBlocking(Dispatchers.IO) { rentDao.getById(uuid)?.toRentModel() }
 
-    override fun insert(dataModel: RentModel): Boolean = try { rentDao.insert(dataModel.toRentEntity()); true } catch (e: Exception) { false }
+    override fun insert(dataModel: RentModel): Boolean = try { runBlocking(Dispatchers.IO) { rentDao.insert(dataModel.toRentEntity()) }; true } catch (e: Exception) { false }
 
-    override fun update(dataModel: RentModel): Boolean = try { rentDao.update(dataModel.toRentEntity()); true } catch (e: Exception) { false }
+    override fun update(dataModel: RentModel): Boolean = try { runBlocking(Dispatchers.IO) { rentDao.update(dataModel.toRentEntity()) }; true } catch (e: Exception) { false }
 
-    override fun delete(uuid: String): Boolean = try { rentDao.delete(uuid); true } catch (e: Exception) { false }
+    override fun delete(uuid: String): Boolean = try { runBlocking(Dispatchers.IO) { rentDao.delete(uuid) }; true } catch (e: Exception) { false }
 }

@@ -4,6 +4,8 @@ import cat.deim.asm01.pedalean2.data.datasource.database.dao.UserDao
 import cat.deim.asm01.pedalean2.data.datasource.database.model.UserEntity
 import com.pedalean2.common.datasource.local.model.UserModel
 import com.pedalean2.common.interfaces.IDatasource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 class UserLocalDatasource(private val userDao: UserDao) : IDatasource<UserModel> {
 
@@ -27,13 +29,13 @@ class UserLocalDatasource(private val userDao: UserDao) : IDatasource<UserModel>
         )
     }
 
-    override fun getAll(): List<UserModel> = userDao.getAll().map { it.toUserModel() }
+    override fun getAll(): List<UserModel> = runBlocking(Dispatchers.IO) { userDao.getAll().map { it.toUserModel() } }
 
-    override fun getById(uuid: String): UserModel? = userDao.getById(uuid)?.toUserModel()
+    override fun getById(uuid: String): UserModel? = runBlocking(Dispatchers.IO) { userDao.getById(uuid)?.toUserModel() }
 
-    override fun insert(dataModel: UserModel): Boolean = try { userDao.insert(dataModel.toUserEntity()); true } catch (e: Exception) { false }
+    override fun insert(dataModel: UserModel): Boolean = try { runBlocking(Dispatchers.IO) { userDao.insert(dataModel.toUserEntity()) }; true } catch (e: Exception) { false }
 
-    override fun update(dataModel: UserModel): Boolean = try { userDao.update(dataModel.toUserEntity()); true } catch (e: Exception) { false }
+    override fun update(dataModel: UserModel): Boolean = try { runBlocking(Dispatchers.IO) { userDao.update(dataModel.toUserEntity()) }; true } catch (e: Exception) { false }
 
-    override fun delete(uuid: String): Boolean = try { userDao.delete(uuid); true } catch (e: Exception) { false }
+    override fun delete(uuid: String): Boolean = try { runBlocking(Dispatchers.IO) { userDao.delete(uuid) }; true } catch (e: Exception) { false }
 }
