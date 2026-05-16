@@ -2,11 +2,15 @@ package cat.deim.asm01.pedalean2.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cat.deim.asm01.pedalean2.data.datasource.remote.RetrofitClient
+import cat.deim.asm01.pedalean2.data.datasource.remote.model.LoginRequest
 import cat.deim.asm01.pedalean2.domain.repository.IUserRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 sealed class LoginState {
     object Idle : LoginState()
@@ -24,7 +28,7 @@ class LoginViewModel(
 
     fun login(emailInput: String, passwordInput: String) {
         if (emailInput.isBlank() || passwordInput.isBlank()) {
-            _loginState.value = LoginState.Error("Siusplau, omple tots els camps.")
+            _loginState.value = LoginState.Error("Si us plau, omple tots els camps.")
             return
         }
 
@@ -32,19 +36,25 @@ class LoginViewModel(
 
         viewModelScope.launch {
             try {
-                val activeUser = userRepository.getActiveUser()
-
-                if (activeUser.email == emailInput) {
-                    if (passwordInput == "1234") {
-                        _loginState.value = LoginState.Success
-                    } else {
-                        _loginState.value = LoginState.Error("Contrasenya incorrecta (Pista: és 1234)")
-                    }
-                } else {
-                    _loginState.value = LoginState.Error("No s'ha trobat cap usuari amb aquest email.")
+                val response = withContext(Dispatchers.IO) {
+                    RetrofitClient.apiService.login(
+                        serverToken = RetrofitClient.SERVER_TOKEN,
+                        request = LoginRequest(emailInput, passwordInput)
+                    )
                 }
+
+                RetrofitClient.accessToken = response.access
+
+                withContext(Dispatchers.IO) {
+                    userRepository.getActiveUser()
+                }
+
+                _loginState.value = LoginState.Success
+
+            } catch (e: retrofit2.HttpException) {
+                _loginState.value = LoginState.Error("Correu o contrasenya incorrectes.")
             } catch (e: Exception) {
-                _loginState.value = LoginState.Error("Error: ${e.message}")
+                _loginState.value = LoginState.Error("Error de xarxa: ${e.message}")
             }
         }
     }

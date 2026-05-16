@@ -26,12 +26,12 @@ class MainActivity : ComponentActivity() {
 
                 val userRepository = UserRepository(
                     localDatasource = UserLocalDatasource(database.userDao()),
-                    remoteDatasource = factory.createUserDatasource()
+                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource()
                 )
 
                 val bikeRepository = BikeRepository(
                     localDatasource = BikeLocalDatasource(database.bikeDao()),
-                    remoteDatasource = factory.createBikeDatasource()
+                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.BikeRemoteDatasource()
                 )
 
                 val viewModel: MainViewModel = ViewModelProvider(

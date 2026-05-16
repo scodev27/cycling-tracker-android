@@ -1,0 +1,20 @@
+package cat.deim.asm01.pedalean2.data.datasource.remote
+
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+object RetrofitClient {
+    private const val BASE_URL = "https://api.pedalean2.com/"
+
+    const val SERVER_TOKEN = "server_token_lasm_2025"
+
+    var accessToken: String = ""
+
+    val apiService: APIService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(APIService::class.java)
+    }
+}

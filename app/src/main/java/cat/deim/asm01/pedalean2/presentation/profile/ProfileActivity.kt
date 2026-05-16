@@ -23,12 +23,12 @@ class ProfileActivity : ComponentActivity() {
 
                 val userRepository = UserRepository(
                     localDatasource = UserLocalDatasource(database.userDao()),
-                    remoteDatasource = factory.createUserDatasource()
+                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource()
                 )
 
                 val rentRepository = RentRepository(
                     localDatasource = RentLocalDatasource(database.rentDao()),
-                    remoteDatasource = factory.createRentDatasource()
+                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.RentRemoteDatasource()
                 )
 
                 val viewModel: ProfileViewModel = ViewModelProvider(
