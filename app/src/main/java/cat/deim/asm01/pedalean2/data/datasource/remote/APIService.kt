@@ -1,10 +1,12 @@
 package cat.deim.asm01.pedalean2.data.datasource.remote
 
 import cat.deim.asm01.pedalean2.data.datasource.remote.model.LoginRequest
+import cat.deim.asm01.pedalean2.data.datasource.remote.model.RentRequest
 import cat.deim.asm01.pedalean2.data.datasource.remote.model.TokenResponse
-import com.pedalean2.common.datasource.local.model.BikeModel
-import com.pedalean2.common.datasource.local.model.RentModel
-import com.pedalean2.common.datasource.local.model.UserModel
+import cat.deim.asm01.pedalean2.data.datasource.remote.model.BikeResponse
+import cat.deim.asm01.pedalean2.data.datasource.remote.model.UserResponse
+import cat.deim.asm01.pedalean2.data.datasource.remote.model.RentHistoryResponse
+import cat.deim.asm01.pedalean2.data.datasource.remote.model.SingleRentResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -18,22 +20,35 @@ interface APIService {
         @Body request: LoginRequest
     ): TokenResponse
 
-    @GET("endpoints/v2/user/")
+    @GET("endpoints/v2/user")
     suspend fun getUser(
         @Header("server-token") serverToken: String,
         @Header("Authorization") authToken: String
-    ): List<UserModel>
+    ): UserResponse
 
-    @GET("endpoints/v2/bike/")
+    @GET("endpoints/v2/bike")
     suspend fun getBikes(
         @Header("server-token") serverToken: String,
         @Header("Authorization") authToken: String
-    ): List<BikeModel>
+    ): BikeResponse
 
-    @GET("endpoints/v2/rent/")
+    @GET("endpoints/v2/rent")
     suspend fun getRents(
         @Header("server-token") serverToken: String,
         @Header("Authorization") authToken: String
-    ): List<RentModel>
+    ): RentHistoryResponse
 
+    @POST("endpoints/v2/rent/start")
+    suspend fun startRent(
+        @Header("server-token") serverToken: String,
+        @Header("Authorization") authToken: String,
+        @Body request: RentRequest
+    ): SingleRentResponse
+
+    @POST("endpoints/v2/rent/stop")
+    suspend fun stopRent(
+        @Header("server-token") serverToken: String,
+        @Header("Authorization") authToken: String,
+        @Body request: RentRequest
+    ): SingleRentResponse
 }

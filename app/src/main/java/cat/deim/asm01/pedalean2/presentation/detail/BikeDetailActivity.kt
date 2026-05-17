@@ -8,37 +8,37 @@ import androidx.lifecycle.ViewModelProvider
 import cat.deim.asm01.pedalean2.data.datasource.BikeLocalDatasource
 import cat.deim.asm01.pedalean2.data.datasource.RentLocalDatasource
 import cat.deim.asm01.pedalean2.data.datasource.UserLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.BikeRemoteDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.RentRemoteDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource
 import cat.deim.asm01.pedalean2.data.datasource.database.Pedalean2AppDatabase
 import cat.deim.asm01.pedalean2.data.repository.BikeRepository
 import cat.deim.asm01.pedalean2.data.repository.RentRepository
 import cat.deim.asm01.pedalean2.data.repository.UserRepository
 import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
-import com.pedalean2.common.factory.DatasourceFactory
 
 class BikeDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val bikeUuid = intent.getStringExtra("BIKE_UUID") ?: ""
 
         setContent {
             Pedalean2Theme {
-                val factory = DatasourceFactory.getInstance()
                 val database = Pedalean2AppDatabase.getDatabase(this@BikeDetailActivity)
 
                 val bikeRepository = BikeRepository(
                     localDatasource = BikeLocalDatasource(database.bikeDao()),
-                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.BikeRemoteDatasource()
+                    remoteDatasource = BikeRemoteDatasource()
                 )
 
                 val rentRepository = RentRepository(
                     localDatasource = RentLocalDatasource(database.rentDao()),
-                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.RentRemoteDatasource()
+                    remoteDatasource = RentRemoteDatasource()
                 )
 
                 val userRepository = UserRepository(
                     localDatasource = UserLocalDatasource(database.userDao()),
-                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource()
+                    remoteDatasource = UserRemoteDatasource()
                 )
 
                 val viewModel: BikeDetailViewModel = ViewModelProvider(
@@ -50,10 +50,7 @@ class BikeDetailActivity : ComponentActivity() {
                     }
                 )[BikeDetailViewModel::class.java]
 
-                BikeDetailScreen(
-                    viewModel = viewModel,
-                    onBackClick = { finish() }
-                )
+                BikeDetailScreen(viewModel = viewModel, onBackClick = { finish() })
             }
         }
     }

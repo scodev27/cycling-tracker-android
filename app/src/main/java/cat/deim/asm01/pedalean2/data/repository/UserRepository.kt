@@ -69,7 +69,8 @@ class UserRepository(
             allUsers = localDatasource.getAll()
         }
 
-        return allUsers.first().toDomain()
+        return allUsers.firstOrNull()?.toDomain()
+            ?: throw Exception("No s'ha pogut descarregar el perfil del servidor.")
     }
 
     override fun setActiveUser(user: User) {

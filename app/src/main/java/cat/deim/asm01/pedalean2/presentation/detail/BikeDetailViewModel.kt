@@ -40,6 +40,8 @@ class BikeDetailViewModel(
     private fun loadBikeDetails() {
         viewModelScope.launch {
             try {
+                bikeRepository.getAll()
+
                 val bike = bikeRepository.getByUuid(bikeUuid)
                 if (bike != null) {
                     _state.value = BikeDetailState.Success(bike)
@@ -57,60 +59,40 @@ class BikeDetailViewModel(
         if (currentState is BikeDetailState.Success) {
             val bike = currentState.bike
             val isNowRented = !bike.isRented
+
             val newLat = if (isNowRented) bike.latitude + Random.nextDouble(-0.005, 0.005).toFloat() else bike.latitude
             val newLon = if (isNowRented) bike.longitude + Random.nextDouble(-0.005, 0.005).toFloat() else bike.longitude
 
-            val updatedBike = bike.copy(
-                isRented = isNowRented,
-                latitude = newLat,
-                longitude = newLon
-            )
-
             viewModelScope.launch {
                 try {
-                    bikeRepository.update(updatedBike)
+                    val activeUser = userRepository.getActiveUser()
 
-                    if (isNowRented) {
-                        val activeUser = userRepository.getActiveUser()
-                        val newRent = Rent(
-                            uuid = UUID.randomUUID().toString(),
-                            timeStart = Date(),
-                            timeEnd = Date(),
-                            isRented = true,
-                            rentTime = 0,
-                            rentMeters = 0,
-                            rentStartLatitude = bike.latitude,
-                            rentStartLongitude = bike.longitude,
-                            rents = BikeRent(uuid = bike.uuid, name = bike.name),
-                            rented_by = UserRent(
-                                username = activeUser.username,
-                                email = activeUser.email,
-                                firstName = activeUser.name,
-                                lastName = ""
-                            )
-                        )
-                        rentRepository.createRent(newRent)
+                    val dummyRent = Rent(
+                        uuid = UUID.randomUUID().toString(),
+                        timeStart = Date(), timeEnd = Date(), isRented = isNowRented, rentTime = 0, rentMeters = 0,
+                        rentStartLatitude = newLat, rentStartLongitude = newLon,
+                        rents = BikeRent(uuid = bike.uuid, name = bike.name),
+                        rented_by = UserRent(username = activeUser.username, email = activeUser.email, firstName = activeUser.name, lastName = "")
+                    )
+
+                    val success = if (isNowRented) {
+                        rentRepository.createRent(dummyRent)
                     } else {
-                        val activeRents = rentRepository.getAllRents()
-                        val rentToStop = activeRents.find { it.rents.uuid == bike.uuid && it.isRented }
-
-                        if (rentToStop != null) {
-                            val now = Date()
-                            val timeDiffMins = ((now.time - rentToStop.timeStart.time) / 60000).toInt()
-                            val finalMins = if (timeDiffMins > 0) timeDiffMins else 1
-
-                            val updatedRent = rentToStop.copy(
-                                isRented = false,
-                                timeEnd = now,
-                                rentTime = finalMins,
-                                rentMeters = Random.nextInt(800, 2500)
-                            )
-                            rentRepository.updateRent(updatedRent)
-                        }
+                        rentRepository.updateRent(dummyRent)
                     }
-                    _state.value = BikeDetailState.Success(updatedBike)
+
+                    if (success) {
+                        val updatedBike = bike.copy(
+                            isRented = isNowRented, latitude = newLat, longitude = newLon
+                        )
+                        bikeRepository.update(updatedBike)
+                        _state.value = BikeDetailState.Success(updatedBike)
+                    } else {
+                        loadBikeDetails()
+                    }
                 } catch (e: Exception) {
-                    _state.value = BikeDetailState.Error("Error: ${e.message}")
+                    _state.value = BikeDetailState.Error("Error de connexió.")
+                    loadBikeDetails()
                 }
             }
         }

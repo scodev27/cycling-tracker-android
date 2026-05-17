@@ -7,23 +7,22 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cat.deim.asm01.pedalean2.data.datasource.UserLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource
 import cat.deim.asm01.pedalean2.data.datasource.database.Pedalean2AppDatabase
 import cat.deim.asm01.pedalean2.data.repository.UserRepository
 import cat.deim.asm01.pedalean2.presentation.main.MainActivity
 import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
-import com.pedalean2.common.factory.DatasourceFactory
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Pedalean2Theme {
-                val factory = DatasourceFactory.getInstance()
                 val database = Pedalean2AppDatabase.getDatabase(this@LoginActivity)
 
                 val userRepository = UserRepository(
                     localDatasource = UserLocalDatasource(database.userDao()),
-                    remoteDatasource = factory.createUserDatasource()
+                    remoteDatasource = UserRemoteDatasource()
                 )
 
                 val loginViewModel: LoginViewModel = ViewModelProvider(
@@ -38,8 +37,7 @@ class LoginActivity : ComponentActivity() {
                 LoginScreen(
                     viewModel = loginViewModel,
                     onLoginSuccess = {
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        startActivity(intent)
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
                     }
                 )

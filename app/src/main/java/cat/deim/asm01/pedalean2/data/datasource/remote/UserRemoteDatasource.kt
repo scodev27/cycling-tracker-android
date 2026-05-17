@@ -9,18 +9,19 @@ class UserRemoteDatasource : IDatasource<UserModel> {
 
     override fun getAll(): List<UserModel> = try {
         runBlocking(Dispatchers.IO) {
-            RetrofitClient.apiService.getUser(
+            val response = RetrofitClient.apiService.getUser(
                 serverToken = RetrofitClient.SERVER_TOKEN,
                 authToken = "Bearer ${RetrofitClient.accessToken}"
             )
+            listOf(response.user)
         }
     } catch (e: Exception) {
-        android.util.Log.e("API_ERROR", "Error baixant usuari", e)
+        android.util.Log.e("API_ERROR", "Error baixant usuari: ${e.message}", e)
         emptyList()
     }
 
     override fun getById(uuid: String): UserModel? {
-        return getAll().find { it.uuid == uuid } ?: getAll().firstOrNull()
+        return getAll().firstOrNull()
     }
 
     override fun insert(dataModel: UserModel): Boolean = false

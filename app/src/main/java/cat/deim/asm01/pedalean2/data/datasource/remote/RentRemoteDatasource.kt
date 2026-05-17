@@ -1,5 +1,6 @@
 package cat.deim.asm01.pedalean2.data.datasource.remote
 
+import cat.deim.asm01.pedalean2.data.datasource.remote.model.RentRequest
 import com.pedalean2.common.datasource.local.model.RentModel
 import com.pedalean2.common.interfaces.IDatasource
 import kotlinx.coroutines.Dispatchers
@@ -9,13 +10,13 @@ class RentRemoteDatasource : IDatasource<RentModel> {
 
     override fun getAll(): List<RentModel> = try {
         runBlocking(Dispatchers.IO) {
-            RetrofitClient.apiService.getRents(
+            val response = RetrofitClient.apiService.getRents(
                 serverToken = RetrofitClient.SERVER_TOKEN,
                 authToken = "Bearer ${RetrofitClient.accessToken}"
             )
+            response.rents ?: emptyList()
         }
     } catch (e: Exception) {
-        android.util.Log.e("API_ERROR", "Error descarregant l'historial de lloguers remotament", e)
         emptyList()
     }
 
@@ -24,6 +25,34 @@ class RentRemoteDatasource : IDatasource<RentModel> {
     }
 
     override fun insert(dataModel: RentModel): Boolean = false
+
     override fun update(dataModel: RentModel): Boolean = false
+
     override fun delete(uuid: String): Boolean = false
+
+    fun startRentRemote(bikeUuid: String, lat: Double, lon: Double): RentModel? = try {
+        runBlocking(Dispatchers.IO) {
+            val response = RetrofitClient.apiService.startRent(
+                serverToken = RetrofitClient.SERVER_TOKEN,
+                authToken = "Bearer ${RetrofitClient.accessToken}",
+                request = RentRequest(bikeUuid, lat, lon)
+            )
+            response.rent
+        }
+    } catch (e: Exception) {
+        null
+    }
+
+    fun stopRentRemote(bikeUuid: String, lat: Double, lon: Double): RentModel? = try {
+        runBlocking(Dispatchers.IO) {
+            val response = RetrofitClient.apiService.stopRent(
+                serverToken = RetrofitClient.SERVER_TOKEN,
+                authToken = "Bearer ${RetrofitClient.accessToken}",
+                request = RentRequest(bikeUuid, lat, lon)
+            )
+            response.rent
+        }
+    } catch (e: Exception) {
+        null
+    }
 }

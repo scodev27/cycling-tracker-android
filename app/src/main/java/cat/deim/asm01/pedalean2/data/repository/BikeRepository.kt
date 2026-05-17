@@ -45,19 +45,20 @@ class BikeRepository(
     }
 
     override fun getAll(): List<Bike> {
-        var localBikes = localDatasource.getAll()
-
-        if (localBikes.isEmpty()) {
+        try {
             val remoteBikes = remoteDatasource.getAll()
-
-            remoteBikes.forEach { bikeModel ->
-                localDatasource.insert(bikeModel)
+            if (remoteBikes.isNotEmpty()) {
+                remoteBikes.forEach { bikeModel ->
+                    if (!localDatasource.update(bikeModel)) {
+                        localDatasource.insert(bikeModel)
+                    }
+                }
             }
-
-            localBikes = localDatasource.getAll()
+        } catch (e: Exception) {
+            android.util.Log.e("REPO", "Error actualitzant bicis", e)
         }
 
-        return localBikes.map { it.toDomain() }
+        return localDatasource.getAll().map { it.toDomain() }
     }
 
     override fun insertAll(bikes: List<Bike>): Int {

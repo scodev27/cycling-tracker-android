@@ -8,30 +8,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cat.deim.asm01.pedalean2.data.datasource.BikeLocalDatasource
 import cat.deim.asm01.pedalean2.data.datasource.UserLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.BikeRemoteDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource
 import cat.deim.asm01.pedalean2.data.datasource.database.Pedalean2AppDatabase
 import cat.deim.asm01.pedalean2.data.repository.BikeRepository
 import cat.deim.asm01.pedalean2.data.repository.UserRepository
 import cat.deim.asm01.pedalean2.presentation.detail.BikeDetailActivity
-import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
 import cat.deim.asm01.pedalean2.presentation.profile.ProfileActivity
-import com.pedalean2.common.factory.DatasourceFactory
+import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Pedalean2Theme {
-                val factory = DatasourceFactory.getInstance()
                 val database = Pedalean2AppDatabase.getDatabase(this@MainActivity)
 
                 val userRepository = UserRepository(
                     localDatasource = UserLocalDatasource(database.userDao()),
-                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource()
+                    remoteDatasource = UserRemoteDatasource()
                 )
 
                 val bikeRepository = BikeRepository(
                     localDatasource = BikeLocalDatasource(database.bikeDao()),
-                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.BikeRemoteDatasource()
+                    remoteDatasource = BikeRemoteDatasource()
                 )
 
                 val viewModel: MainViewModel = ViewModelProvider(
@@ -45,9 +45,7 @@ class MainActivity : ComponentActivity() {
 
                 MainScreen(
                     viewModel = viewModel,
-                    onProfileClick = {
-                        startActivity(Intent(this@MainActivity, ProfileActivity::class.java))
-                    },
+                    onProfileClick = { startActivity(Intent(this@MainActivity, ProfileActivity::class.java)) },
                     onBikeClick = { bikeUuid ->
                         val intent = Intent(this@MainActivity, BikeDetailActivity::class.java)
                         intent.putExtra("BIKE_UUID", bikeUuid)

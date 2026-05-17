@@ -7,28 +7,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cat.deim.asm01.pedalean2.data.datasource.RentLocalDatasource
 import cat.deim.asm01.pedalean2.data.datasource.UserLocalDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.RentRemoteDatasource
+import cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource
 import cat.deim.asm01.pedalean2.data.datasource.database.Pedalean2AppDatabase
 import cat.deim.asm01.pedalean2.data.repository.RentRepository
 import cat.deim.asm01.pedalean2.data.repository.UserRepository
 import cat.deim.asm01.pedalean2.presentation.ui.theme.Pedalean2Theme
-import com.pedalean2.common.factory.DatasourceFactory
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Pedalean2Theme {
-                val factory = DatasourceFactory.getInstance()
                 val database = Pedalean2AppDatabase.getDatabase(this@ProfileActivity)
 
                 val userRepository = UserRepository(
                     localDatasource = UserLocalDatasource(database.userDao()),
-                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.UserRemoteDatasource()
+                    remoteDatasource = UserRemoteDatasource()
                 )
 
                 val rentRepository = RentRepository(
                     localDatasource = RentLocalDatasource(database.rentDao()),
-                    remoteDatasource = cat.deim.asm01.pedalean2.data.datasource.remote.RentRemoteDatasource()
+                    remoteDatasource = RentRemoteDatasource()
                 )
 
                 val viewModel: ProfileViewModel = ViewModelProvider(
@@ -40,10 +40,7 @@ class ProfileActivity : ComponentActivity() {
                     }
                 )[ProfileViewModel::class.java]
 
-                ProfileScreen(
-                    viewModel = viewModel,
-                    onBackClick = { finish() }
-                )
+                ProfileScreen(viewModel = viewModel, onBackClick = { finish() })
             }
         }
     }
