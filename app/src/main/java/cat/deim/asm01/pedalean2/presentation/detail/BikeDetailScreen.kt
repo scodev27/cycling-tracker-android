@@ -1,7 +1,6 @@
 package cat.deim.asm01.pedalean2.presentation.detail
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,16 +19,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import cat.deim.asm01.pedalean2.R
 import cat.deim.asm01.pedalean2.presentation.ui.theme.RentActiveColor
 import cat.deim.asm01.pedalean2.presentation.ui.theme.RentAvailableColor
-import cat.deim.asm01.pedalean2.presentation.ui.theme.SuccessGreen
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -148,36 +153,32 @@ fun BikeDetailScreen(viewModel: BikeDetailViewModel, onBackClick: () -> Unit) {
 
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_32)))
 
-                        Box(
+                        val context = LocalContext.current
+                        Configuration.getInstance().userAgentValue = context.packageName
+
+                        AndroidView(
+                            factory = { ctx ->
+                                MapView(ctx).apply {
+                                    setTileSource(TileSourceFactory.MAPNIK)
+                                    setMultiTouchControls(true)
+
+                                    val bikePoint = GeoPoint(bike.latitude.toDouble(), bike.longitude.toDouble())
+
+                                    controller.setZoom(18.0)
+                                    controller.setCenter(bikePoint)
+
+                                    val marker = Marker(this)
+                                    marker.position = bikePoint
+                                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                                    marker.title = bike.name
+                                    overlays.add(marker)
+                                }
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
                                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.dp_16)))
-                                .background(Color.LightGray)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.mapa_reus),
-                                contentDescription = stringResource(id = R.string.map_desc),
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-
-                            val refLat = 41.132f
-                            val refLon = 1.245f
-                            val multiplier = 8000f
-                            val calcX = ((bike.longitude - refLon) * multiplier).dp
-                            val calcY = ((refLat - bike.latitude) * multiplier).dp
-
-                            Icon(
-                                imageVector = Icons.Default.LocationOn,
-                                contentDescription = stringResource(id = R.string.pin_desc),
-                                tint = SuccessGreen,
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .offset(x = calcX, y = calcY)
-                                    .size(dimensionResource(id = R.dimen.dp_48))
-                            )
-                        }
+                        )
                     }
                 }
             }
