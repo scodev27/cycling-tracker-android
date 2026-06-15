@@ -3,8 +3,8 @@ package cat.deim.asm01.pedalean2.data.repository
 import cat.deim.asm01.pedalean2.domain.models.Bike
 import cat.deim.asm01.pedalean2.domain.repository.IBikeRepository
 import cat.deim.asm01.pedalean2.utils.toDate
-import com.pedalean2.common.datasource.local.model.BikeModel
-import com.pedalean2.common.interfaces.IDatasource
+import cat.deim.asm01.pedalean2.common.models.BikeModel
+import cat.deim.asm01.pedalean2.common.IDatasource
 
 class BikeRepository(
     private val localDatasource: IDatasource<BikeModel>,

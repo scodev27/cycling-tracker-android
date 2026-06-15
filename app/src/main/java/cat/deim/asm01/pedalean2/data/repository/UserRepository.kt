@@ -2,8 +2,8 @@ package cat.deim.asm01.pedalean2.data.repository
 
 import cat.deim.asm01.pedalean2.domain.models.User
 import cat.deim.asm01.pedalean2.domain.repository.IUserRepository
-import com.pedalean2.common.datasource.local.model.UserModel
-import com.pedalean2.common.interfaces.IDatasource
+import cat.deim.asm01.pedalean2.common.models.UserModel
+import cat.deim.asm01.pedalean2.common.IDatasource
 import cat.deim.asm01.pedalean2.utils.toDate
 
 class UserRepository(

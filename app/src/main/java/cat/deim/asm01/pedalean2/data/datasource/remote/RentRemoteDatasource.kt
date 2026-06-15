@@ -1,8 +1,8 @@
 package cat.deim.asm01.pedalean2.data.datasource.remote
 
 import cat.deim.asm01.pedalean2.data.datasource.remote.model.RentRequest
-import com.pedalean2.common.datasource.local.model.RentModel
-import com.pedalean2.common.interfaces.IDatasource
+import cat.deim.asm01.pedalean2.common.models.RentModel
+import cat.deim.asm01.pedalean2.common.IDatasource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 

@@ -2,8 +2,8 @@ package cat.deim.asm01.pedalean2.data.datasource
 
 import cat.deim.asm01.pedalean2.data.datasource.database.dao.UserDao
 import cat.deim.asm01.pedalean2.data.datasource.database.model.UserEntity
-import com.pedalean2.common.datasource.local.model.UserModel
-import com.pedalean2.common.interfaces.IDatasource
+import cat.deim.asm01.pedalean2.common.models.UserModel
+import cat.deim.asm01.pedalean2.common.IDatasource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 

@@ -6,10 +6,10 @@ import cat.deim.asm01.pedalean2.domain.models.BikeRent
 import cat.deim.asm01.pedalean2.domain.models.UserRent
 import cat.deim.asm01.pedalean2.domain.repository.IRentRepository
 import cat.deim.asm01.pedalean2.utils.toDate
-import com.pedalean2.common.datasource.local.model.BikeRentModel
-import com.pedalean2.common.datasource.local.model.RentModel
-import com.pedalean2.common.datasource.local.model.UserRentModel
-import com.pedalean2.common.interfaces.IDatasource
+import cat.deim.asm01.pedalean2.common.models.BikeRentModel
+import cat.deim.asm01.pedalean2.common.models.RentModel
+import cat.deim.asm01.pedalean2.common.models.UserRentModel
+import cat.deim.asm01.pedalean2.common.IDatasource
 
 class RentRepository(
     private val localDatasource: IDatasource<RentModel>,

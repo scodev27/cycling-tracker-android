@@ -2,10 +2,10 @@ package cat.deim.asm01.pedalean2.data.datasource
 
 import cat.deim.asm01.pedalean2.data.datasource.database.dao.RentDao
 import cat.deim.asm01.pedalean2.data.datasource.database.model.RentEntity
-import com.pedalean2.common.datasource.local.model.BikeRentModel
-import com.pedalean2.common.datasource.local.model.RentModel
-import com.pedalean2.common.datasource.local.model.UserRentModel
-import com.pedalean2.common.interfaces.IDatasource
+import cat.deim.asm01.pedalean2.common.models.BikeRentModel
+import cat.deim.asm01.pedalean2.common.models.RentModel
+import cat.deim.asm01.pedalean2.common.models.UserRentModel
+import cat.deim.asm01.pedalean2.common.IDatasource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -22,7 +22,7 @@ class RentLocalDatasource(private val rentDao: RentDao) : IDatasource<RentModel>
 
     private fun RentModel.toRentEntity(): RentEntity {
         return RentEntity(
-            uuid = this.uuid, timeStart = this.timeStart, timeEnd = this.timeEnd, isRented = this.isRented,
+            uuid = this.uuid, timeStart = this.timeStart, timeEnd = this.timeEnd ?: "", isRented = this.isRented,
             rentTime = this.rentTime, rentMeters = this.rentMeters, rentStartLatitude = this.rentStartLatitude, rentStartLongitude = this.rentStartLongitude,
             bikeUuid = this.bike.uuid, bikeName = this.bike.name,
             userUsername = this.user.username, userEmail = this.user.email, userFirstName = this.user.firstName, userLastName = this.user.lastName
