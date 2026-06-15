@@ -1,4 +1,4 @@
-package cat.deim.asm01.pedalean2.presentation.main // Ajusta el paquet si l'has dit diferent
+package cat.deim.asm01.pedalean2.presentation.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,7 +30,7 @@ class MainViewModel(
     }
 
     private fun loadData() {
-        viewModelScope.launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             try {
                 val currentUser = userRepository.getActiveUser()
 

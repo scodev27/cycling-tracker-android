@@ -30,7 +30,7 @@ class ProfileViewModel(
     }
 
     private fun loadProfileData() {
-        viewModelScope.launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             try {
                 val currentUser = userRepository.getActiveUser()
                 val allRents = rentRepository.getAllRents()

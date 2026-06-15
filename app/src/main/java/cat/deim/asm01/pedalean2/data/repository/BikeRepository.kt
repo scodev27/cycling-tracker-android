@@ -49,15 +49,15 @@ class BikeRepository(
             val remoteBikes = remoteDatasource.getAll()
             if (remoteBikes.isNotEmpty()) {
                 remoteBikes.forEach { bikeModel ->
-                    if (!localDatasource.update(bikeModel)) {
-                        localDatasource.insert(bikeModel)
-                    }
+                    localDatasource.insert(bikeModel)
+                }
+                return remoteBikes.mapNotNull {
+                    try { it.toDomain() } catch (e: Exception) { null }
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("REPO", "Error actualitzant bicis", e)
+            android.util.Log.e("REPO", "Error", e)
         }
-
         return localDatasource.getAll().map { it.toDomain() }
     }
 
@@ -97,7 +97,11 @@ class BikeRepository(
     }
 
     override fun getByUuid(uuid: String): Bike? {
-        val bikeModel = localDatasource.getById(uuid)
+        var bikeModel = localDatasource.getById(uuid)
+        if (bikeModel == null) {
+            bikeModel = remoteDatasource.getById(uuid)
+            bikeModel?.let { localDatasource.insert(it) }
+        }
         return bikeModel?.toDomain()
     }
 

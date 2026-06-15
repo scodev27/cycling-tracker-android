@@ -38,7 +38,7 @@ class BikeDetailViewModel(
     }
 
     private fun loadBikeDetails() {
-        viewModelScope.launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             try {
                 bikeRepository.getAll()
 
